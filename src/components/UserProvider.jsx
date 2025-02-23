@@ -1,24 +1,23 @@
-import React, {createContext, useEffect, useState} from 'react';
+import React, { createContext, useState, useEffect } from "react";
 
-export const UserContext = createContext();
-
-const initialUserData = {
-    firstName: '',
-    lastName: '',
-    middleName: '',
-    email: '',
-    userType: 'unauthorized',
-};
+export const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
-    const [userData, setUserData] = useState(() => {
-        const storedData = localStorage.getItem('userData');
-        return storedData ? JSON.parse(storedData) : initialUserData;
-    });
+    const [userData, setUserData] = useState(null);
 
     useEffect(() => {
-        localStorage.setItem('userData', JSON.stringify(userData));
-    }, [userData]);
+        const token = localStorage.getItem("token");
+        if (token) {
+            fetch("http://localhost:5000/me", {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.id) setUserData(data);
+                })
+                .catch(() => setUserData(null));
+        }
+    }, []);
 
     return (
         <UserContext.Provider value={{ userData, setUserData }}>
