@@ -1,43 +1,78 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { UserContext } from "../components/UserProvider";
 
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [code, setCode] = useState("");
+    const [step, setStep] = useState(1); // 1 - ввод email, 2 - ввод кода и пароля
     const [error, setError] = useState("");
-    const { setUserData } = useContext(UserContext);
     const navigate = useNavigate();
 
+    // Отправляем email для получения кода
     const handleRegister = async (e) => {
         e.preventDefault();
+        setError(""); // Сброс ошибки перед отправкой
 
+        // Валидация email
+        const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            setError("Пожалуйста, введите корректный email");
+            return;
+        }
+
+        try {
+            const res = await fetch("http://localhost:5000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                setStep(2); // Переход к вводу кода и пароля
+            } else {
+                setError(data.message);
+            }
+        } catch (err) {
+            setError("Ошибка сети");
+        }
+    };
+
+    // Подтверждение email и завершение регистрации
+    const handleConfirm = async (e) => {
+        e.preventDefault();
+        setError(""); // Сброс ошибки перед отправкой
+
+        // Валидация паролей
         if (password !== confirmPassword) {
             setError("Пароли не совпадают");
             return;
         }
 
+        // Проверка на пустое поле пароля
+        if (!password || !confirmPassword) {
+            setError("Пароль и подтверждение пароля обязательны");
+            return;
+        }
+
         try {
-            const response = await fetch("http://localhost:5000/register", {
+            const res = await fetch("http://localhost:5000/confirm", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, code, password }),
             });
+            const data = await res.json();
 
-            const data = await response.json();
-
-            if (response.ok) {
-                // Сохраняем данные пользователя и токен, затем переходим на страницу FirstAidKit
-                setUserData(data.user);
-
-                navigate("/firstAidKit");
+            if (res.ok) {
+                localStorage.setItem("token", data.token);
+                navigate("/firstAidKit"); // Переход на страницу после успешной регистрации
             } else {
                 setError(data.message);
             }
         } catch (err) {
-            console.error(err);
-            setError("Ошибка при регистрации");
+            setError("Ошибка сети");
         }
     };
 
@@ -47,47 +82,64 @@ const Register = () => {
                 <div className="top-block">
                     <h2 className="bottom-title">Добро пожаловать!</h2>
                     <p className="bottom-question">Есть аккаунт?</p>
-                    {/* Используем Link вместо <a>, чтобы не происходила полная перезагрузка */}
                     <Link to="/" className="register-btn">Войти</Link>
                 </div>
                 <div className="enter-block col-container">
                     <div className="img-container enter-block__img">
                         <img src="/assets/images/logo.png" alt="logo" />
                     </div>
-                    <form className="enter-form col-container" onSubmit={handleRegister}>
-                        <div className="enter-block__input col-container">
-                            <input
-                                id="login"
-                                type="email"
-                                placeholder="Email"
-                                className="enter__input"
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="enter-block__input col-container">
-                            <input
-                                id="password"
-                                type="password"
-                                placeholder="Password"
-                                className="enter__input"
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="enter-block__input col-container">
-                            <input
-                                type="password"
-                                placeholder="Repeat password"
-                                className="enter__input"
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                required
-                            />
-                        </div>
-                        {error && <p className="error">{error}</p>}
-                        <Link to="/forgot-password" className="enter-remember">Забыли пароль?</Link>
-                        <input className="enter-btn" type="submit" value="Зарегистрироваться" />
-                    </form>
+
+                    {step === 1 ? (
+                        <form className="enter-form col-container" onSubmit={handleRegister}>
+                            <div className="enter-block__input col-container">
+                                <input
+                                    type="email"
+                                    placeholder="Email"
+                                    className="enter__input"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            {error && <p className="error">{error}</p>}
+                            <input className="enter-btn" type="submit" value="Отправить код" />
+                        </form>
+                    ) : (
+                        <form className="enter-form col-container" onSubmit={handleConfirm}>
+                            <div className="enter-block__input col-container">
+                                <input
+                                    type="text"
+                                    placeholder="Код подтверждения"
+                                    className="enter__input"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="enter-block__input col-container">
+                                <input
+                                    type="password"
+                                    placeholder="Пароль"
+                                    className="enter__input"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="enter-block__input col-container">
+                                <input
+                                    type="password"
+                                    placeholder="Повторите пароль"
+                                    className="enter__input"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                    required
+                                />
+                            </div>
+                            {error && <p className="error">{error}</p>}
+                            <input className="enter-btn" type="submit" value="Подтвердить" />
+                        </form>
+                    )}
                 </div>
             </div>
         </div>
