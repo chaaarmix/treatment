@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../components/UserProvider";
 
 const Enter = () => {
@@ -12,21 +12,28 @@ const Enter = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        const response = await fetch("http://localhost:5000/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-        });
+        try {
+            const response = await fetch("http://localhost:5000/enter", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (response.ok) {
-            localStorage.setItem("token", data.token);
-            navigate("/FirstAidKit");
-        } else {
-            setError(data.message);
+            if (response.ok) {
+                setUserData(data.user); // <-- теперь user будет передаваться
+
+                navigate("/firstAidKit");
+            } else {
+                setError(data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Ошибка при входе");
         }
     };
+
 
     return (
         <div className="App">
@@ -54,7 +61,8 @@ const Enter = () => {
                                 onChange={(e)  => setPassword(e.target.value)} required
                             />
                         </div>
-                        <a href="/forgot-password" className="enter-remember">Забыли пароль?</a>
+                        {error && <p className="error">{error}</p>}
+                        <Link to="/forgot-password" className="enter-remember">Забыли пароль?</Link>
                         <input className="enter-btn" type="submit" value="Войти" />
                     </form>
                 </div>

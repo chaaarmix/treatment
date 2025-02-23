@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { UserContext } from "../components/UserProvider";
 
 const Register = () => {
@@ -18,19 +18,26 @@ const Register = () => {
             return;
         }
 
-        const response = await fetch("http://localhost:5000/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-        });
+        try {
+            const response = await fetch("http://localhost:5000/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (response.ok) {
-            setUserData(data.user);
-            navigate("/");
-        } else {
-            setError(data.message);
+            if (response.ok) {
+                // Сохраняем данные пользователя и токен, затем переходим на страницу FirstAidKit
+                setUserData(data.user);
+
+                navigate("/firstAidKit");
+            } else {
+                setError(data.message);
+            }
+        } catch (err) {
+            console.error(err);
+            setError("Ошибка при регистрации");
         }
     };
 
@@ -40,14 +47,15 @@ const Register = () => {
                 <div className="top-block">
                     <h2 className="bottom-title">Добро пожаловать!</h2>
                     <p className="bottom-question">Есть аккаунт?</p>
-                    <a href="/" className="register-btn">Войти</a>
+                    {/* Используем Link вместо <a>, чтобы не происходила полная перезагрузка */}
+                    <Link to="/" className="register-btn">Войти</Link>
                 </div>
                 <div className="enter-block col-container">
                     <div className="img-container enter-block__img">
                         <img src="/assets/images/logo.png" alt="logo" />
                     </div>
                     <form className="enter-form col-container" onSubmit={handleRegister}>
-                        <div className="enter-block__input col-container ">
+                        <div className="enter-block__input col-container">
                             <input
                                 id="login"
                                 type="email"
@@ -75,9 +83,9 @@ const Register = () => {
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 required
                             />
-                            {error && <p className="error">{error}</p>}
                         </div>
-                        <a href="/forgot-password" className="enter-remember">Забыли пароль?</a>
+                        {error && <p className="error">{error}</p>}
+                        <Link to="/forgot-password" className="enter-remember">Забыли пароль?</Link>
                         <input className="enter-btn" type="submit" value="Зарегистрироваться" />
                     </form>
                 </div>
