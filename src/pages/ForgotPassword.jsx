@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
-const Register = () => {
+const ForgotPassword = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [code, setCode] = useState("");
-    const [step, setStep] = useState(1); // 1 - ввод email, 2 - ввод кода и пароля
+    const [step, setStep] = useState(1);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -75,7 +75,7 @@ const Register = () => {
         <div className="App">
             <div className="enter">
                 <div className="top-block">
-                    <h2 className="bottom-title">Добро пожаловать!</h2>
+                    <h2 className="bottom-title">Восстановление пароля</h2>
                     <p className="bottom-question">Есть аккаунт?</p>
                     <Link to="/" className="register-btn">Войти</Link>
                 </div>
@@ -141,4 +141,4 @@ const Register = () => {
     );
 };
 
-export default Register;
+export default ForgotPassword;

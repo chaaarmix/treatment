@@ -192,3 +192,11 @@ a {
 .error-block{
     justify-content: space-between;
 }
+
+.error__text__message{
+    font-weight: 500;
+    font-size: 13px;
+    text-align: center;
+    color: #8181a3;
+    margin-bottom: 10px;
+}

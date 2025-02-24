@@ -22,8 +22,7 @@ const Enter = () => {
             const data = await response.json();
 
             if (response.ok) {
-                setUserData(data.user); // <-- теперь user будет передаваться
-
+                setUserData(data.user);
                 navigate("/firstAidKit");
             } else {
                 setError(data.message);
@@ -62,7 +61,7 @@ const Enter = () => {
                             />
                         </div>
                         {error && <p className="error">{error}</p>}
-                        <Link to="/forgot-password" className="enter-remember">Забыли пароль?</Link>
+                        <a href="/forgotPassword" className="enter-remember">Забыли пароль?</a>
                         <input className="enter-btn" type="submit" value="Войти" />
                     </form>
                 </div>
