@@ -21,7 +21,7 @@ const ForgotPassword = () => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/register", {
+            const res = await fetch("http://localhost:5000/forgot-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email }),
@@ -53,7 +53,7 @@ const ForgotPassword = () => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/confirm", {
+            const res = await fetch("http://localhost:5000/reset-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, code, password }),
