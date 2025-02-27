@@ -1,14 +1,14 @@
 import React from 'react';
 import Navbar from "../components/Navbar";
 
-const FirstAidKit = () => {
+const Calendar = () => {
 
     return (
         <div className="App enter">
-            <div>Аптечка</div>
+            Календарь
             <Navbar/>
         </div>
     );
 };
 
-export default FirstAidKit;
+export default Calendar;

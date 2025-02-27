@@ -1,14 +1,14 @@
 import React from 'react';
 import Navbar from "../components/Navbar";
 
-const FirstAidKit = () => {
+const Notifications = () => {
 
     return (
         <div className="App enter">
-            <div>Аптечка</div>
+           Уведомления
             <Navbar/>
         </div>
     );
 };
 
-export default FirstAidKit;
+export default Notifications;

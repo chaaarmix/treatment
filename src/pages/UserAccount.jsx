@@ -1,14 +1,14 @@
 import React from 'react';
 import Navbar from "../components/Navbar";
 
-const FirstAidKit = () => {
+const UserAccount = () => {
 
     return (
         <div className="App enter">
-            <div>Аптечка</div>
+            Аккаунт
             <Navbar/>
         </div>
     );
 };
 
-export default FirstAidKit;
+export default UserAccount;
