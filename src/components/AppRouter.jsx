@@ -1,18 +1,18 @@
-import { Routes, Route } from "react-router-dom";
-import Enter from "../pages/Enter";
-import FirstAidKit from "../pages/FirstAidKit";
-import Register from "../pages/Register";
-import Error from "../pages/Error";
-import ForgotPassword from "../pages/ForgotPassword";
+import React from 'react';
+import {Routes, Route, Navigate} from "react-router-dom";
+import {routes} from "../router";
 
 const AppRouter = () => {
     return (
         <Routes>
-            <Route path="/" element={<Enter />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/firstAidKit" element={<FirstAidKit />} />
-            <Route path="/forgotPassword" element={<ForgotPassword />} />
-            <Route path="*" element={<Error />} />
+            {routes.map(route => (
+                <Route
+                    path={route.path}
+                    element={route.element}
+                    key={route.path}
+                />
+            ))}
+            <Route path="*" element={<Navigate to="/error" replace />} />
         </Routes>
     );
 };

@@ -6,37 +6,40 @@ import ForgotPassword from "../pages/ForgotPassword";
 import Calendar from "../pages/Calendar";
 import Notifications from "../pages/Notifications";
 import UserAccount from "../pages/UserAccount";
+import ProtectedRoute from "../components/ProtectedRoute";
+
 export const routes = [
     {
         path: '/',
-        element: <Enter/>,
+        element: <Enter />,
     },
     {
-        path:'/firstAidKit',
-        element: <FirstAidKit/>,
-    },
-    {
-        path:'/register',
-        element: <Register/>,
+        path: '/register',
+        element: <Register />,
     },
     {
         path: '/forgotPassword',
-        element: <ForgotPassword/>,
-    },
-    {
-        path: '/calendar',
-        element: <Calendar/>,
-    },
-    {
-        path: '/notifications',
-        element: <Notifications/>,
-    },
-    {
-        path: '/userAccount',
-        element: <UserAccount/>,
+        element: <ForgotPassword />,
     },
     {
         path: '/error',
-        element: <Error/>,
-    }
+        element: <Error />,
+    },
+
+    {
+        path: '/firstAidKit',
+        element: <ProtectedRoute element={<FirstAidKit />} />,
+    },
+    {
+        path: '/calendar',
+        element: <ProtectedRoute element={<Calendar />} />,
+    },
+    {
+        path: '/notifications',
+        element: <ProtectedRoute element={<Notifications />} />,
+    },
+    {
+        path: '/userAccount',
+        element: <ProtectedRoute element={<UserAccount />} />,
+    },
 ];
