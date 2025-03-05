@@ -6,7 +6,7 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [code, setCode] = useState("");
-    const [step, setStep] = useState(1); // 1 - ввод email, 2 - ввод кода и пароля
+    const [step, setStep] = useState(1);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 

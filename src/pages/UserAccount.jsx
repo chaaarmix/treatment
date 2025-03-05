@@ -16,7 +16,7 @@ const UserAccount = () => {
 
     const handleDeleteAccount = async () => {
         try {
-            const token = localStorage.getItem("token"); // Получаем JWT-токен
+            const token = localStorage.getItem("token");
             if (!token) {
                 alert("Вы не авторизованы!");
                 return;
@@ -25,15 +25,15 @@ const UserAccount = () => {
             const response = await fetch("http://localhost:5000/delete-account", {
                 method: "DELETE",
                 headers: {
-                    "Authorization": `Bearer ${token}`, // Отправляем токен
+                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json",
                 },
             });
 
             const data = await response.json();
             if (response.ok) {
-                localStorage.removeItem("token"); // Удаляем токен
-                window.location.href = "/"; // Перенаправляем на главную
+                localStorage.removeItem("token");
+                window.location.href = "/";
             } else {
                 alert(data.message);
             }
@@ -50,12 +50,11 @@ const UserAccount = () => {
             <button className="btn btn-primary" onClick={handleLogout}>
                 Выйти из аккаунта
             </button>
-            <button className="btn btn-danger" onClick={() => setIsModalOpen(true)}>
+            <button className="btn" onClick={() => setIsModalOpen(true)}>
                 Удалить аккаунт
             </button>
             <Navbar />
 
-            {/* Модальное окно */}
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal">

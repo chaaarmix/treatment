@@ -23,7 +23,7 @@ const Enter = () => {
 
             if (response.ok) {
                 setUserData(data.user);
-                localStorage.setItem("token", data.token); // Должно быть при успешном входе
+                localStorage.setItem("token", data.token);
                 navigate("/firstAidKit");
             } else {
                 setError(data.message);
