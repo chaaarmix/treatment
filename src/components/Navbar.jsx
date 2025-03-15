@@ -3,29 +3,25 @@ import { useLocation, Link } from "react-router-dom";
 
 const Navbar = () => {
     const location = useLocation();
+    const navItems = [
+        { path: "/firstAidKit", icon: "first-aid-kit-icon.png", activeIcon: "first-aid-kit-icon(white).png", alt: "First Aid Kit" },
+        { path: "/calendar", icon: "calendar-icon.png", activeIcon: "calendar-icon(white).png", alt: "Calendar" },
+        { path: "/notifications", icon: "notification-icon.png", activeIcon: "notification-icon(white).png", alt: "Notifications" },
+        { path: "/userAccount", icon: "user-icon.png", activeIcon: "user-icon(white).png", alt: "User Account" },
+    ];
 
     return (
         <div className="navbar-container">
-            <div className={`navbar-container__block ${location.pathname === "/firstAidKit" ? "active" : ""}`}>
-                <Link to="/firstAidKit" className="navbar-link">
-                    <img src="/assets/images/first-aid-kit-icon.png" alt="first-aid-kit"/>
-                </Link>
-            </div>
-            <div className={`navbar-container__block ${location.pathname === "/calendar" ? "active" : ""}`}>
-                <Link to="/calendar" className="navbar-link">
-                    <img src="/assets/images/calendar-icon.png" alt="calendar"/>
-                </Link>
-            </div>
-            <div className={`navbar-container__block ${location.pathname === "/notifications" ? "active" : ""}`}>
-                <Link to="/notifications" className="navbar-link">
-                    <img src="/assets/images/notification-icon.png" alt="notification"/>
-                </Link>
-            </div>
-            <div className={`navbar-container__block ${location.pathname === "/userAccount" ? "active" : ""}`}>
-                <Link to="/userAccount" className="navbar-link">
-                    <img src="/assets/images/user-icon.png" alt="user"/>
-                </Link>
-            </div>
+            {navItems.map((item) => {
+                const isActive = location.pathname === item.path;
+                return (
+                    <div key={item.path} className={`navbar-container__block ${isActive ? "active" : ""}`}>
+                        <Link to={item.path} className="navbar-link">
+                            <img src={`/assets/images/${isActive ? item.activeIcon : item.icon}`} alt={item.alt} />
+                        </Link>
+                    </div>
+                );
+            })}
         </div>
     );
 };
