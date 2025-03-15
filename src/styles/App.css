@@ -289,7 +289,7 @@ a {
 }
 
 .btn-danger {
-    background: red;
+    background: rgba(255, 0, 0, 0.27);
     color: white;
     padding: 10px;
     border: none;
@@ -304,4 +304,236 @@ a {
     border: none;
     cursor: pointer;
     border-radius: 5px;
+}
+/* Общий контейнер */
+.user-account {
+    font-family: "Poppins", sans-serif;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Анимация появления */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-account h2 {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Поля ввода */
+.input-group {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+    color: #444;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    background: rgba(255, 255, 255, 0.7);
+    outline: none;
+}
+
+/* Эффект свечения при фокусе */
+.input-group input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+/* Группа выбора пола */
+.gender-group {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Группа выбора пола */
+.gender-group {
+    display: flex;
+    justify-content: space-around;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+/* Карточки пола */
+.gender-option {
+    flex: 1;
+    padding: 14px;
+    border-radius: 14px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid transparent;
+}
+
+/* Иконки */
+.gender-option i {
+    font-size: 22px;
+    transition: transform 0.3s ease-in-out;
+    color: #555;
+}
+
+/* Анимация при наведении */
+.gender-option:hover {
+    transform: scale(1.03);
+    background: rgba(240, 248, 255, 0.4);
+    box-shadow: 0 0 10px rgba(0, 183, 255, 0.3);
+}
+
+/* Выбранный мужской вариант */
+.gender-option.selected.male {
+    background: linear-gradient(135deg, #ddefff, #eaf6ff);
+    color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.4);
+    border: 2px solid #007bff;
+}
+
+.gender-option.selected.male i {
+    transform: scale(1.1);
+    color: #007bff;
+}
+
+/* Выбранный женский вариант */
+.gender-option.selected.female {
+    background: linear-gradient(135deg, #ffe0f0, #ffebf5);
+    color: #ff1493;
+    box-shadow: 0 0 10px rgba(255, 20, 147, 0.4);
+    border: 2px solid #ff1493;
+}
+
+.gender-option.selected.female i {
+    transform: scale(1.1);
+    color: #ff1493;
+}
+
+
+/* Кнопки */
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff, #00bfff);
+    color: white;
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0056b3, #007bff);
+    transform: scale(1.05);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, rgba(255, 77, 77, 0.54), #ff6b6b);
+    color: white;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, rgba(212, 63, 63, 0.44), #ff4d4d);
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: scale(1.05);
+}
+
+/* Модальное окно */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.modal {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    transform: scale(0.8);
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.modal h3 {
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+.modal p {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-buttons button {
+    width: 48%;
 }
