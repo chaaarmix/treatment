@@ -596,3 +596,61 @@ a {
 .delete-btn:hover {
     background: #675454;
 }
+
+/* Контейнер для блока фильтрации */
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 300px;
+}
+
+/* Заголовок блока фильтра */
+.filter-container label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+    padding: 5px;
+}
+
+/* Селект для выбора категории */
+#categoryFilter {
+    width: fit-content;
+    padding: 8px 12px;
+    font-size: 13px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+}
+
+#categoryFilter:focus {
+    border-color: #007bff; /* Цвет при фокусе */
+    outline: none;
+}
+
+#categoryFilter option {
+    padding: 8px 12px;
+    font-size: 1rem;
+}
+
+.filter-block{
+    padding: 10px;
+}
+
+.add-btn{
+    width: 100%;
+    background: linear-gradient(86deg, #4958ff 0%, #3dc5ff 100%);
+    color: white;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 14px;
+    padding: 8px 10px;
+}

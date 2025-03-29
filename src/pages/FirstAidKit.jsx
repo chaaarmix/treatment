@@ -1,12 +1,17 @@
 import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../components/UserProvider";
+import Fuse from "fuse.js";  // Импортируем библиотеку
 
 const FirstAidKit = () => {
     const { userData } = useContext(UserContext);
-    const [medicine, setMedicine] = useState({ name: ""});
+    const [medicine, setMedicine] = useState({ name: "" });
     const [medicines, setMedicines] = useState([]);
     const [expandedMedicineId, setExpandedMedicineId] = useState(null);
+    const [filterCategory, setFilterCategory] = useState(""); // Фильтр категории
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const categories = ["Обезболивающее", "Антисептик", "Антибиотик", "Жаропонижающее", "Противолаллергенное", "Противовирусное"]; // Пример категорий
 
     useEffect(() => {
         fetchMedicines();
@@ -84,11 +89,39 @@ const FirstAidKit = () => {
         }
     };
 
+    const filterMedicines = (category) => {
+        if (!category) return medicines; // Если фильтр не выбран, показываем все медикаменты
 
+        const lowerCategory = category.toLowerCase();
+
+        // 1. Фильтрация через includes()
+        let filteredByIncludes = medicines.filter((medicine) =>
+            medicine.med_group.toLowerCase().includes(lowerCategory)
+        );
+
+        // 2. Используем Fuse.js для поиска в med_group и description
+        const fuse = new Fuse(medicines, {
+            keys: ["med_group", "description"], // Добавили поиск по описанию!
+            includeScore: true,
+            threshold: 0.4,
+        });
+
+        let fuseResults = fuse.search(category).map((result) => result.item);
+
+        // 3. Объединяем includes + Fuse.js и убираем дубликаты по id
+        let combinedResults = [...filteredByIncludes, ...fuseResults];
+
+        let uniqueResults = combinedResults.filter(
+            (med, index, self) => index === self.findIndex((m) => m.id === med.id)
+        );
+
+        return uniqueResults;
+    };
+
+
+    const filteredMedicines = filterMedicines(filterCategory);
     return (
-
-        <div >
-
+        <div>
             <form onSubmit={handleSubmit} className="medicine-form">
                 <input
                     type="text"
@@ -98,12 +131,30 @@ const FirstAidKit = () => {
                     onChange={handleChange}
                     required
                 />
-                <button type="submit" className="enter-btn" >Добавить</button>
+                <button type="submit" className="add-btn">Добавить</button>
             </form>
+
+            <div className="filter-block row-container">
+
+                <select
+                    id="categoryFilter"
+                    value={filterCategory}
+                    onChange={(e) => setFilterCategory(e.target.value)}
+                >
+                    <option value="">Все категории</option>
+                    {categories.map((category) => (
+                        <option key={category} value={category}>
+                            {category}
+                        </option>
+                    ))}
+                </select>
+
+            </div>
+
             <div className="first-aid-kit">
                 <h2 className="first-aid-kit_header">Моя аптечка</h2>
                 <div className="medicine-list">
-                    {medicines.map((med) => (
+                    {filteredMedicines.map((med) => (
                         <div key={med.id} className="medicine-card">
                             <div className="medicine-card__content">
                                 <h3>{med.name}</h3>
@@ -140,8 +191,7 @@ const FirstAidKit = () => {
                 </div>
             </div>
 
-
-            <Navbar/>
+            <Navbar />
         </div>
     );
 };
