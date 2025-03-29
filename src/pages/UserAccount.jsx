@@ -134,11 +134,13 @@ const UserAccount = () => {
         <div>
 
             <div className="user-account">
+
                 <div className="user-account__header ">
 
                     Личный кабинет
 
                 </div>
+
 
                 <div className="user-mainblock">
                     <div className="icon-col row-container">
@@ -197,17 +199,15 @@ const UserAccount = () => {
                         </div>
 
 
-
-                            <button className="enter-btn" onClick={handleLogout}>
-                                Выйти из аккаунта
-                            </button>
-
-
-                        </div>
-                        <button className="btn btn-danger" onClick={() => setIsModalOpen(true)}>
-                            Удалить аккаунт
+                        <button className="enter-btn" onClick={handleLogout}>
+                            Выйти из аккаунта
                         </button>
 
+
+                    </div>
+                    <button className="btn btn-danger" onClick={() => setIsModalOpen(true)}>
+                        Удалить аккаунт
+                    </button>
 
 
                 </div>
