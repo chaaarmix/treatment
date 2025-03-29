@@ -9,7 +9,7 @@ const FirstAidKit = () => {
     const [medicines, setMedicines] = useState([]);
     const [expandedMedicineId, setExpandedMedicineId] = useState(null);
     const [filterCategory, setFilterCategory] = useState(""); // Фильтр категории
-    const [searchQuery, setSearchQuery] = useState("");
+    const [searchQuery, setSearchQuery] = useState(""); // Поиск по названию
 
     const categories = ["Обезболивающее", "Антисептик", "Антибиотик", "Жаропонижающее", "Противолаллергенное", "Противовирусное"]; // Пример категорий
 
@@ -118,8 +118,22 @@ const FirstAidKit = () => {
         return uniqueResults;
     };
 
+    const searchMedicines = (medicines, query) => {
+        if (!query) return medicines; // Если поисковый запрос пуст, возвращаем все лекарства
+        const fuse = new Fuse(medicines, {
+            keys: ["name"],  // Поиск по названию лекарства
+            includeScore: true,
+            threshold: 0.4,  // Порог чувствительности (чем ниже значение, тем точнее)
+        });
+
+        const results = fuse.search(query).map((result) => result.item);  // Ищем все совпадения по названию
+        return results;
+    };
+
 
     const filteredMedicines = filterMedicines(filterCategory);
+    const searchedMedicines = searchMedicines(filteredMedicines, searchQuery); // Применяем поиск к отфильтрованным данным
+
     return (
         <div>
             <form onSubmit={handleSubmit} className="medicine-form">
@@ -135,11 +149,20 @@ const FirstAidKit = () => {
             </form>
 
             <div className="filter-block row-container">
+                <input
+                    type="text"
+                    placeholder="Поиск по названию"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="search-input"
+                />
 
                 <select
                     id="categoryFilter"
                     value={filterCategory}
                     onChange={(e) => setFilterCategory(e.target.value)}
+                    className="category-select"
+
                 >
                     <option value="">Все категории</option>
                     {categories.map((category) => (
@@ -148,13 +171,12 @@ const FirstAidKit = () => {
                         </option>
                     ))}
                 </select>
-
             </div>
 
             <div className="first-aid-kit">
                 <h2 className="first-aid-kit_header">Моя аптечка</h2>
                 <div className="medicine-list">
-                    {filteredMedicines.map((med) => (
+                    {searchedMedicines.map((med) => (
                         <div key={med.id} className="medicine-card">
                             <div className="medicine-card__content">
                                 <h3>{med.name}</h3>

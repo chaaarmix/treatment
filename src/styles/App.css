@@ -628,20 +628,27 @@ a {
     border-radius: 5px;
     background-color: #fff;
     transition: border-color 0.3s ease;
+
 }
 
 #categoryFilter:focus {
     border-color: #007bff; /* Цвет при фокусе */
     outline: none;
+
+
 }
 
 #categoryFilter option {
     padding: 8px 12px;
     font-size: 1rem;
+
+
 }
 
 .filter-block{
     padding: 10px;
+    gap: 10px;
+
 }
 
 .add-btn{
@@ -653,4 +660,8 @@ a {
     cursor: pointer;
     border-radius: 14px;
     padding: 8px 10px;
+}
+
+.category-select option {
+    font-size: 15px  !important; /* Размер текста в выпадающем списке */
 }
