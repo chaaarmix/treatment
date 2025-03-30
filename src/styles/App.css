@@ -665,3 +665,146 @@ a {
 .category-select option {
     font-size: 15px  !important; /* Размер текста в выпадающем списке */
 }
+
+
+.treatment-form {
+    background-color: #f1f3f5;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.treatment-form input,
+.treatment-form select,
+.treatment-form button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.treatment-form button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.treatment-form button:hover {
+    background-color: #0056b3;
+}
+.personal-calendar {
+    width: 100% !important;
+    max-width: 400px;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.personal-calendar__tile {
+    padding: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.personal-calendar__tile--active {
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+}
+
+.day-schedule {
+    margin-top: 16px;
+    background-color: white;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.day-schedule h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.day-schedule .schedule-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+}
+
+.day-schedule .schedule-item p {
+    margin: 5px 0;
+}
+@media (max-width: 600px) {
+    .treatment-form {
+        padding: 10px;
+    }
+
+    .treatment-form input,
+    .treatment-form select,
+    .treatment-form button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .personal-calendar__tile {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    .day-schedule {
+        padding: 10px;
+    }
+}
+
+.treatment-form {
+    background-color: #f1f3f5;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.toggle-form-button {
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.toggle-form-button:hover {
+    background-color: #0056b3;
+}
+
+.form-content {
+    display: block; /* Это можно заменить на 'none', когда форма свернута */
+    transition: all 0.3s ease;
+}
+
+.time-options label {
+    font-size: 16px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.time-options input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+@media (max-width: 600px) {
+    .treatment-form {
+        padding: 10px;
+    }
+
+    .toggle-form-button {
+        font-size: 14px;
+        padding: 8px;
+    }
+}
+
