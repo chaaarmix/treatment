@@ -73,7 +73,8 @@ const CalendarPage = () => {
                     dosage: newTreatment.dosage,
                     start_date: newTreatment.startDate,
                     end_date: newTreatment.endDate,
-                    frequency: newTreatment.frequency
+                    frequency: newTreatment.frequency,
+                    comment: newTreatment.comment // Добавляем комментарий
                 }, {
                     headers: {
                         Authorization: `Bearer ${token}`, // Отправляем токен в заголовке
@@ -286,6 +287,14 @@ const CalendarPage = () => {
                             className="border p-2 rounded w-full mb-2"
                         />
 
+                        <input
+                            type="text"
+                            placeholder="Дополнительный комментарий (например, перед едой)"
+                            value={newTreatment.comment}
+                            onChange={(e) => setNewTreatment({...newTreatment, comment: e.target.value})}
+                            className="border p-2 rounded w-full mb-2"
+                        />
+
                     </div>
                 )}
             </div>
@@ -294,7 +303,7 @@ const CalendarPage = () => {
             <Calendar
                 key={selectedDate.toISOString()}
                 onChange={handleDateChange}
-                onActiveStartDateChange={({ activeStartDate }) => {
+                onActiveStartDateChange={({activeStartDate}) => {
                     setSelectedDate(activeStartDate);
                     refetch(); // Перезапрашиваем данные при смене месяца
                 }}
@@ -320,6 +329,8 @@ const CalendarPage = () => {
                                 <p><strong>{treatment.medicine}</strong></p>
                                 <p>Время: {getTreatmentTimes(treatment.time)}</p> {/* Время приема на русском */}
                                 <p>Дозировка: {treatment.dosage}</p>
+                                {treatment.comment && <p><strong>Комментарий:</strong> {treatment.comment}</p>}
+
                             </div>
                         ))
                     ) : (
