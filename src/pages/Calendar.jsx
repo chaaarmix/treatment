@@ -165,6 +165,27 @@ const CalendarPage = () => {
     const handleMedicineChange = (e) => {
         setNewTreatment({ ...newTreatment, medicine: e.target.value });
     };
+
+    const getDayScheduleTitle = () => {
+        const dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
+        return `Лечение на ${dayNames[selectedDate.getDay()]}, ${selectedDate.toLocaleDateString()}`;
+    };
+
+    const getTreatmentTimes = (time) => {
+        const timeMap = {
+            morning: 'Утро',
+            afternoon: 'День',
+            evening: 'Вечер',
+        };
+
+        if (Array.isArray(time)) {
+            return time.map(t => timeMap[t]).join(", ");
+        }
+
+        return Object.keys(time).map(t => timeMap[t]).join(", ");
+    };
+
+
     return (
         <div className="p-4">
             <Navbar />
@@ -292,12 +313,12 @@ const CalendarPage = () => {
             {/* Просмотр расписания дня */}
             {selectedDate && (
                 <div className="day-schedule">
-                    <h3>Лечение на {selectedDate.toDateString()}</h3>
+                    <h3>{getDayScheduleTitle()}</h3>
                     {getTreatmentsForSelectedDate().length > 0 ? (
                         getTreatmentsForSelectedDate().map((treatment, index) => (
                             <div key={index} className="schedule-item">
                                 <p><strong>{treatment.medicine}</strong></p>
-                                <p>Время: {treatment.time}</p>
+                                <p>Время: {getTreatmentTimes(treatment.time)}</p> {/* Время приема на русском */}
                                 <p>Дозировка: {treatment.dosage}</p>
                             </div>
                         ))
