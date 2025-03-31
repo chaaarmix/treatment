@@ -139,6 +139,8 @@ const CalendarPage = () => {
         fetchMedicines();
     }, []);
 
+
+
     // Функция для поиска медикаментов
     const searchMedicines = (medicines, query) => {
         if (!query) return []; // Если строка пустая, не показываем подсказки
@@ -186,6 +188,28 @@ const CalendarPage = () => {
         return Object.keys(time).map(t => timeMap[t]).join(", ");
     };
 
+    const [expandedMedicineId, setExpandedMedicineId] = useState(null);
+
+    const toggleExpand = (id) => {
+        setExpandedMedicineId(expandedMedicineId === id ? null : id);
+    };
+
+    // Загружаем список лекарств
+    const { data: medicine, isLoading: medicinesLoading } = useQuery({
+        queryKey: ["medicine"],
+        queryFn: async () => {
+            const { data } = await axios.get(`${API_URL}/medicines`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            return data;
+        },
+        enabled: !!token,
+    });
+
+    // Создаём маппинг ID → объект лекарства
+    const medMap = medicine ? Object.fromEntries(medicine.map(med => [med.id, med])) : {};
+
+
 
     return (
         <div className="p-4">
@@ -219,7 +243,9 @@ const CalendarPage = () => {
                         {/* Показываем список предложений только если строка поиска не пуста */}
                         {medicineSuggestions.length > 0 && newTreatment.medicine && (
                             <ul>
+                                <h3>Лекарства в наличии:</h3>
                                 {medicineSuggestions.map((med) => (
+
                                     <li key={med.id}>{med.name}</li>
                                 ))}
                             </ul>
@@ -319,25 +345,52 @@ const CalendarPage = () => {
 
 
 
+
             {/* Просмотр расписания дня */}
             {selectedDate && (
                 <div className="day-schedule">
-                    <h3>{getDayScheduleTitle()}</h3>
+                    <h3>Лечение на {selectedDate.toLocaleDateString()}</h3>
                     {getTreatmentsForSelectedDate().length > 0 ? (
-                        getTreatmentsForSelectedDate().map((treatment, index) => (
-                            <div key={index} className="schedule-item">
-                                <p><strong>{treatment.medicine}</strong></p>
-                                <p>Время: {getTreatmentTimes(treatment.time)}</p> {/* Время приема на русском */}
-                                <p>Дозировка: {treatment.dosage}</p>
-                                {treatment.comment && <p><strong>Комментарий:</strong> {treatment.comment}</p>}
+                        getTreatmentsForSelectedDate().map((treatment, index) => {
+                            const medicine = medicines?.find(med => med.id === treatment.medicine_id);
+                            return (
+                                <div key={index} className="schedule-item">
+                                    <p><strong>{medicine ? medicine.name : "Неизвестное лекарство"}</strong></p>
+                                    <p>Время: {getTreatmentTimes(treatment.time)}</p>
+                                    <p>Дозировка: {treatment.dosage}</p>
+                                    {treatment.comment && <p><strong>Комментарий:</strong> {treatment.comment}</p>}
 
-                            </div>
-                        ))
+                                    {medicine && (
+                                        <div>
+                                            {expandedMedicineId === medicine.id ? (
+                                                <>
+                                                    <p><strong>Фармакотерапевтическая группа:</strong> {medicine.med_group}</p>
+                                                    <p><strong>Описание:</strong> {medicine.description}</p>
+                                                    <p><strong>Способ применения:</strong> {medicine.use}</p>
+                                                    <p><strong>Показания:</strong> {medicine.indications}</p>
+                                                    <p><strong>Состав:</strong> {medicine.compound}</p>
+                                                    <p><strong>Противопоказания:</strong> {medicine.contraindications}</p>
+                                                    <p><strong>Побочные действия:</strong> {medicine.side_effects}</p>
+                                                    <p><strong>Температура хранения:</strong> {medicine.temperature}</p>
+                                                </>
+                                            ) : (
+                                                <p className="expand-text" onClick={() => toggleExpand(medicine.id)}>Смотреть полностью</p>
+                                            )}
+
+                                            {expandedMedicineId === medicine.id && (
+                                                <p className="collapse-text" onClick={() => toggleExpand(medicine.id)}>Свернуть</p>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })
                     ) : (
-                        <p>Нет назначений</p>
+                        <p>Нет назначений на этот день</p>
                     )}
                 </div>
             )}
+
         </div>
     );
 };
