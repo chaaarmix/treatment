@@ -4,6 +4,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../components/UserProvider";
+import Fuse from "fuse.js";
 
 const API_URL = "http://localhost:5000/treatment"; // URL API
 
@@ -110,27 +111,97 @@ const CalendarPage = () => {
         refetch(); // Перезапрашиваем данные при смене даты
     };
 
+    const [medicines, setMedicines] = useState([]); // Список всех лекарств
+    const [medicineSuggestions, setMedicineSuggestions] = useState([]); // Для хранения предложений
+
+    // Загружаем список лекарств с сервера
+    useEffect(() => {
+        const fetchMedicines = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/medicines', {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Передаем токен для авторизации
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setMedicines(data); // Устанавливаем лекарства
+                } else {
+                    console.error('Ошибка загрузки данных');
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке списка лекарств:', error);
+            }
+        };
+
+        fetchMedicines();
+    }, []);
+
+    // Функция для поиска медикаментов
+    const searchMedicines = (medicines, query) => {
+        if (!query) return []; // Если строка пустая, не показываем подсказки
+        const fuse = new Fuse(medicines, {
+            keys: ['name'], // Поиск по названию лекарства
+            includeScore: true,
+            threshold: 0.4,  // Порог чувствительности
+        });
+
+        const results = fuse.search(query).map(result => result.item); // Результаты поиска
+        return results;
+    };
+
+    // Отслеживаем изменение введенного названия лекарства
+    useEffect(() => {
+        if (newTreatment.medicine) {
+            const results = searchMedicines(medicines, newTreatment.medicine); // Поиск предложений
+            setMedicineSuggestions(results); // Обновляем список предложений
+        } else {
+            setMedicineSuggestions([]); // Если строка пустая, очищаем список подсказок
+        }
+    }, [newTreatment.medicine, medicines]); // Следим за изменением названия лекарства
+
+    // Обработчик изменения в поле поиска
+    const handleMedicineChange = (e) => {
+        setNewTreatment({ ...newTreatment, medicine: e.target.value });
+    };
     return (
         <div className="p-4">
             <Navbar />
             <div className="treatment-form">
+
+                <h2 className="text-xl font-bold mb-2">Добавить лечение</h2>
                 <button
-                    onClick={() => setIsFormOpen(!isFormOpen)}
+                    onClick={() => {
+                        if (isFormOpen) {
+                            // Преобразовать в кнопку "Сохранить лечение", если форма открыта
+                            addTreatment();
+                        }
+                        setIsFormOpen(!isFormOpen);
+                    }}
                     className="toggle-form-button"
                 >
-                    {isFormOpen ? "Скрыть форму" : "Показать форму"}
+                    {isFormOpen ? "Сохранить лечение" : "Показать форму"}
                 </button>
+
 
                 {isFormOpen && (
                     <div className="form-content">
-                        <h2 className="text-xl font-bold mb-2">Добавить лечение</h2>
                         <input
                             type="text"
                             placeholder="Лекарство"
                             value={newTreatment.medicine}
-                            onChange={(e) => setNewTreatment({ ...newTreatment, medicine: e.target.value })}
+                            onChange={(e) => setNewTreatment({...newTreatment, medicine: e.target.value})}
                             className="border p-2 rounded w-full mb-2"
                         />
+                        {/* Показываем список предложений только если строка поиска не пуста */}
+                        {medicineSuggestions.length > 0 && newTreatment.medicine && (
+                            <ul>
+                                {medicineSuggestions.map((med) => (
+                                    <li key={med.id}>{med.name}</li>
+                                ))}
+                            </ul>
+                        )}
 
                         {/* Выбор времени приема лекарства */}
                         <div className="time-options mb-2">
@@ -138,7 +209,10 @@ const CalendarPage = () => {
                                 <input
                                     type="checkbox"
                                     checked={newTreatment.time.morning}
-                                    onChange={(e) => setNewTreatment({ ...newTreatment, time: { ...newTreatment.time, morning: e.target.checked } })}
+                                    onChange={(e) => setNewTreatment({
+                                        ...newTreatment,
+                                        time: {...newTreatment.time, morning: e.target.checked}
+                                    })}
                                     className="mr-2"
                                 />
                                 Утро
@@ -147,7 +221,10 @@ const CalendarPage = () => {
                                 <input
                                     type="checkbox"
                                     checked={newTreatment.time.afternoon}
-                                    onChange={(e) => setNewTreatment({ ...newTreatment, time: { ...newTreatment.time, afternoon: e.target.checked } })}
+                                    onChange={(e) => setNewTreatment({
+                                        ...newTreatment,
+                                        time: {...newTreatment.time, afternoon: e.target.checked}
+                                    })}
                                     className="mr-2"
                                 />
                                 День
@@ -156,7 +233,10 @@ const CalendarPage = () => {
                                 <input
                                     type="checkbox"
                                     checked={newTreatment.time.evening}
-                                    onChange={(e) => setNewTreatment({ ...newTreatment, time: { ...newTreatment.time, evening: e.target.checked } })}
+                                    onChange={(e) => setNewTreatment({
+                                        ...newTreatment,
+                                        time: {...newTreatment.time, evening: e.target.checked}
+                                    })}
                                     className="mr-2"
                                 />
                                 Вечер
@@ -167,24 +247,24 @@ const CalendarPage = () => {
                             type="text"
                             placeholder="Дозировка"
                             value={newTreatment.dosage}
-                            onChange={(e) => setNewTreatment({ ...newTreatment, dosage: e.target.value })}
+                            onChange={(e) => setNewTreatment({...newTreatment, dosage: e.target.value})}
                             className="border p-2 rounded w-full mb-2"
                         />
                         <label>Начало: </label>
                         <input
                             type="date"
                             value={newTreatment.startDate}
-                            onChange={(e) => setNewTreatment({ ...newTreatment, startDate: e.target.value })}
+                            onChange={(e) => setNewTreatment({...newTreatment, startDate: e.target.value})}
                             className="border p-2 rounded w-full mb-2"
                         />
                         <label>Конец: </label>
                         <input
                             type="date"
                             value={newTreatment.endDate}
-                            onChange={(e) => setNewTreatment({ ...newTreatment, endDate: e.target.value })}
+                            onChange={(e) => setNewTreatment({...newTreatment, endDate: e.target.value})}
                             className="border p-2 rounded w-full mb-2"
                         />
-                        <button onClick={addTreatment} className="bg-blue-500 text-white p-2 rounded w-full">Добавить</button>
+
                     </div>
                 )}
             </div>
