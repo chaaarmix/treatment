@@ -256,10 +256,10 @@ const CalendarPage = () => {
                             <label className="block">
                                 <input
                                     type="checkbox"
-                                    checked={newTreatment.time.morning}
+                                    checked={newTreatment.time.утро}
                                     onChange={(e) => setNewTreatment({
                                         ...newTreatment,
-                                        time: {...newTreatment.time, morning: e.target.checked}
+                                        time: {...newTreatment.time, утро: e.target.checked}
                                     })}
                                     className="mr-2"
                                 />
@@ -268,10 +268,10 @@ const CalendarPage = () => {
                             <label className="block">
                                 <input
                                     type="checkbox"
-                                    checked={newTreatment.time.afternoon}
+                                    checked={newTreatment.time.день}
                                     onChange={(e) => setNewTreatment({
                                         ...newTreatment,
-                                        time: {...newTreatment.time, afternoon: e.target.checked}
+                                        time: {...newTreatment.time, день: e.target.checked}
                                     })}
                                     className="mr-2"
                                 />
@@ -280,10 +280,10 @@ const CalendarPage = () => {
                             <label className="block">
                                 <input
                                     type="checkbox"
-                                    checked={newTreatment.time.evening}
+                                    checked={newTreatment.time.вечер}
                                     onChange={(e) => setNewTreatment({
                                         ...newTreatment,
-                                        time: {...newTreatment.time, evening: e.target.checked}
+                                        time: {...newTreatment.time, вечер: e.target.checked}
                                     })}
                                     className="mr-2"
                                 />
@@ -356,7 +356,7 @@ const CalendarPage = () => {
                             return (
                                 <div key={index} className="schedule-item">
                                     <p><strong>{medicine ? medicine.name : "Неизвестное лекарство"}</strong></p>
-                                    <p>Время: {getTreatmentTimes(treatment.time)}</p>
+                                    <p>Время: {treatment.time}</p>
                                     <p>Дозировка: {treatment.dosage}</p>
                                     {treatment.comment && <p><strong>Комментарий:</strong> {treatment.comment}</p>}
 

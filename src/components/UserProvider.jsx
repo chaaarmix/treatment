@@ -16,8 +16,26 @@ const UserProvider = ({ children }) => {
         }
     }, [userData]);
 
+    const [medications, setMedications] = useState(() => {
+        const savedMedications = localStorage.getItem("medications");
+        return savedMedications ? JSON.parse(savedMedications) : [];
+    });
+
+    useEffect(() => {
+        // Сохраняем состояние лекарств в localStorage при изменении
+        localStorage.setItem("medications", JSON.stringify(medications));
+    }, [medications]);
+
+    // Функция для обновления состояния принятия лекарства
+    const handleMedicationTakenChange = (medicationId, isTaken) => {
+        const updatedMedications = medications.map((med) =>
+            med.id === medicationId ? { ...med, taken: isTaken } : med
+        );
+        setMedications(updatedMedications);
+    };
+
     return (
-        <UserContext.Provider value={{ userData, setUserData }}>
+        <UserContext.Provider value={{ userData, setUserData, medications, handleMedicationTakenChange }}>
             {children}
         </UserContext.Provider>
     );
