@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useLayoutEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Calendar from "react-calendar";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -9,10 +9,8 @@ import Fuse from "fuse.js";
 const API_URL = "http://localhost:5000/treatment"; // URL API
 
 const CalendarPage = () => {
-    const { userData } = useContext(UserContext);  // Извлекаем данные пользователя (если нужно)
-    const token = localStorage.getItem("token"); // Получаем токен из localStorage
-
-
+    const { userData } = useContext(UserContext);
+    const token = localStorage.getItem("token");
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [newTreatment, setNewTreatment] = useState({
         medicine: "",
@@ -26,9 +24,7 @@ const CalendarPage = () => {
         endDate: "",
         frequency: "daily"
     });
-    const [isFormOpen, setIsFormOpen] = useState(true); // Состояние для открытия/закрытия формы
-
-    // Запрос на получение лечения для выбранного месяца и года
+    const [isFormOpen, setIsFormOpen] = useState(true);
     const { data: treatments, refetch, isLoading, error } = useQuery({
         queryKey: ["treatments", selectedDate.getFullYear(), selectedDate.getMonth() + 1],
         queryFn: async () => {
@@ -44,8 +40,8 @@ const CalendarPage = () => {
             return data;
         },
         keepPreviousData: true,
-        enabled: !!token, // Запрос делаем только если токен существует
-        staleTime: 0, // Отключаем кэширование, чтобы данные подгружались при каждом рендере
+        enabled: !!token,
+        staleTime: 0,
     });
 
 
@@ -57,10 +53,9 @@ const CalendarPage = () => {
     }, [error]);
 
     useEffect(() => {
-        console.log("Treatments data:", treatments); // Проверим, что данные приходят корректно
+        console.log("Treatments data:", treatments);
     }, [treatments]);
 
-    // Функция для добавления нового лечения
     const addTreatment = async () => {
         if (newTreatment.medicine && newTreatment.startDate && newTreatment.endDate) {
             const medicine = await axios.get(`${API_URL}/medicines`, { params: { name: newTreatment.medicine } });
@@ -74,20 +69,19 @@ const CalendarPage = () => {
                     start_date: newTreatment.startDate,
                     end_date: newTreatment.endDate,
                     frequency: newTreatment.frequency,
-                    comment: newTreatment.comment // Добавляем комментарий
+                    comment: newTreatment.comment
                 }, {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Отправляем токен в заголовке
+                        Authorization: `Bearer ${token}`,
                     },
                 });
-                refetch(); // Обновить данные
+                refetch();
             } else {
                 alert("Лекарство не найдено");
             }
         }
     };
 
-    // Функция для фильтрации назначений по выбранной дате
     const getTreatmentsForSelectedDate = () => {
         if (!treatments) return [];
 
@@ -97,37 +91,33 @@ const CalendarPage = () => {
             const treatmentStartDate = new Date(treatment.start_date);
             const treatmentEndDate = new Date(treatment.end_date);
 
-            // Проверяем, что выбранная дата находится в пределах лечения
             return treatmentStartDate <= selectedDateObject && treatmentEndDate >= selectedDateObject;
         });
     };
 
     useEffect(() => {
-        refetch(); // Перезапрашиваем данные при каждом обновлении страницы
+        refetch();
     }, [selectedDate, refetch]);
-
-    // Обработчик смены месяца в календаре
     const handleDateChange = (newDate) => {
         setSelectedDate(newDate);
-        refetch(); // Перезапрашиваем данные при смене даты
+        refetch();
     };
 
-    const [medicines, setMedicines] = useState([]); // Список всех лекарств
-    const [medicineSuggestions, setMedicineSuggestions] = useState([]); // Для хранения предложений
+    const [medicines, setMedicines] = useState([]);
+    const [medicineSuggestions, setMedicineSuggestions] = useState([]);
 
-    // Загружаем список лекарств с сервера
     useEffect(() => {
         const fetchMedicines = async () => {
             try {
                 const response = await fetch('http://localhost:5000/medicines', {
                     headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}` // Передаем токен для авторизации
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     }
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    setMedicines(data); // Устанавливаем лекарства
+                    setMedicines(data);
                 } else {
                     console.error('Ошибка загрузки данных');
                 }
@@ -139,54 +129,26 @@ const CalendarPage = () => {
         fetchMedicines();
     }, []);
 
-
-
-    // Функция для поиска медикаментов
     const searchMedicines = (medicines, query) => {
-        if (!query) return []; // Если строка пустая, не показываем подсказки
+        if (!query) return [];
         const fuse = new Fuse(medicines, {
-            keys: ['name'], // Поиск по названию лекарства
+            keys: ['name'],
             includeScore: true,
-            threshold: 0.4,  // Порог чувствительности
+            threshold: 0.4,
         });
 
         const results = fuse.search(query).map(result => result.item); // Результаты поиска
         return results;
     };
 
-    // Отслеживаем изменение введенного названия лекарства
     useEffect(() => {
         if (newTreatment.medicine) {
-            const results = searchMedicines(medicines, newTreatment.medicine); // Поиск предложений
-            setMedicineSuggestions(results); // Обновляем список предложений
+            const results = searchMedicines(medicines, newTreatment.medicine);
+            setMedicineSuggestions(results);
         } else {
-            setMedicineSuggestions([]); // Если строка пустая, очищаем список подсказок
+            setMedicineSuggestions([]);
         }
-    }, [newTreatment.medicine, medicines]); // Следим за изменением названия лекарства
-
-    // Обработчик изменения в поле поиска
-    const handleMedicineChange = (e) => {
-        setNewTreatment({ ...newTreatment, medicine: e.target.value });
-    };
-
-    const getDayScheduleTitle = () => {
-        const dayNames = ['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'];
-        return `Лечение на ${dayNames[selectedDate.getDay()]}, ${selectedDate.toLocaleDateString()}`;
-    };
-
-    const getTreatmentTimes = (time) => {
-        const timeMap = {
-            morning: 'Утро',
-            afternoon: 'День',
-            evening: 'Вечер',
-        };
-
-        if (Array.isArray(time)) {
-            return time.map(t => timeMap[t]).join(", ");
-        }
-
-        return Object.keys(time).map(t => timeMap[t]).join(", ");
-    };
+    }, [newTreatment.medicine, medicines]);
 
     const [expandedMedicineId, setExpandedMedicineId] = useState(null);
 
@@ -194,7 +156,6 @@ const CalendarPage = () => {
         setExpandedMedicineId(expandedMedicineId === id ? null : id);
     };
 
-    // Загружаем список лекарств
     const { data: medicine, isLoading: medicinesLoading } = useQuery({
         queryKey: ["medicine"],
         queryFn: async () => {
@@ -206,11 +167,6 @@ const CalendarPage = () => {
         enabled: !!token,
     });
 
-    // Создаём маппинг ID → объект лекарства
-    const medMap = medicine ? Object.fromEntries(medicine.map(med => [med.id, med])) : {};
-
-
-
     return (
         <div className="p-4">
             <Navbar />
@@ -220,7 +176,6 @@ const CalendarPage = () => {
                 <button
                     onClick={() => {
                         if (isFormOpen) {
-                            // Преобразовать в кнопку "Сохранить лечение", если форма открыта
                             addTreatment();
                         }
                         setIsFormOpen(!isFormOpen);
@@ -240,7 +195,6 @@ const CalendarPage = () => {
                             onChange={(e) => setNewTreatment({...newTreatment, medicine: e.target.value})}
                             className="border p-2 rounded w-full mb-2"
                         />
-                        {/* Показываем список предложений только если строка поиска не пуста */}
                         {medicineSuggestions.length > 0 && newTreatment.medicine && (
                             <ul>
                                 <h3>Лекарства в наличии:</h3>
@@ -250,8 +204,6 @@ const CalendarPage = () => {
                                 ))}
                             </ul>
                         )}
-
-                        {/* Выбор времени приема лекарства */}
                         <div className="time-options mb-2">
                             <label className="block">
                                 <input
@@ -325,28 +277,23 @@ const CalendarPage = () => {
                 )}
             </div>
 
-            {/* Динамический календарь */}
             <Calendar
                 key={selectedDate.toISOString()}
                 onChange={handleDateChange}
                 onActiveStartDateChange={({activeStartDate}) => {
                     setSelectedDate(activeStartDate);
-                    refetch(); // Перезапрашиваем данные при смене месяца
+                    refetch();
                 }}
                 value={selectedDate}
                 tileContent={({ date }) => {
                     const dayTreatments = treatments?.filter(t =>
                         new Date(t.start_date) <= date && new Date(t.end_date) >= date
                     );
-                    return dayTreatments?.length ? <div className="bg-green-200 text-xs p-1">{dayTreatments.length} леч.</div> : null;
+                    return dayTreatments?.length ? <div className="bg-green-200 text-xs p-1">+</div> : null;
                 }}
                 className="personal-calendar"
             />
 
-
-
-
-            {/* Просмотр расписания дня */}
             {selectedDate && (
                 <div className="day-schedule">
                     <h3>Лечение на {selectedDate.toLocaleDateString()}</h3>

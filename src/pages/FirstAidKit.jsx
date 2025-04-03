@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../components/UserProvider";
-import Fuse from "fuse.js";  // Импортируем библиотеку
+import Fuse from "fuse.js";
 
 const FirstAidKit = () => {
     const { userData } = useContext(UserContext);
     const [medicine, setMedicine] = useState({ name: "" });
     const [medicines, setMedicines] = useState([]);
     const [expandedMedicineId, setExpandedMedicineId] = useState(null);
-    const [filterCategory, setFilterCategory] = useState(""); // Фильтр категории
-    const [searchQuery, setSearchQuery] = useState(""); // Поиск по названию
+    const [filterCategory, setFilterCategory] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
 
     const categories = ["Обезболивающее", "Антисептик", "Антибиотик", "Жаропонижающее", "Противолаллергенное", "Противовирусное"]; // Пример категорий
 
@@ -90,25 +90,20 @@ const FirstAidKit = () => {
     };
 
     const filterMedicines = (category) => {
-        if (!category) return medicines; // Если фильтр не выбран, показываем все медикаменты
+        if (!category) return medicines;
 
         const lowerCategory = category.toLowerCase();
-
-        // 1. Фильтрация через includes()
         let filteredByIncludes = medicines.filter((medicine) =>
             medicine.med_group.toLowerCase().includes(lowerCategory)
         );
-
-        // 2. Используем Fuse.js для поиска в med_group и description
         const fuse = new Fuse(medicines, {
-            keys: ["med_group", "description"], // Добавили поиск по описанию!
+            keys: ["med_group", "description"],
             includeScore: true,
             threshold: 0.4,
         });
 
         let fuseResults = fuse.search(category).map((result) => result.item);
 
-        // 3. Объединяем includes + Fuse.js и убираем дубликаты по id
         let combinedResults = [...filteredByIncludes, ...fuseResults];
 
         let uniqueResults = combinedResults.filter(
@@ -119,20 +114,20 @@ const FirstAidKit = () => {
     };
 
     const searchMedicines = (medicines, query) => {
-        if (!query) return medicines; // Если поисковый запрос пуст, возвращаем все лекарства
+        if (!query) return medicines;
         const fuse = new Fuse(medicines, {
-            keys: ["name"],  // Поиск по названию лекарства
+            keys: ["name"],
             includeScore: true,
-            threshold: 0.4,  // Порог чувствительности (чем ниже значение, тем точнее)
+            threshold: 0.4,
         });
 
-        const results = fuse.search(query).map((result) => result.item);  // Ищем все совпадения по названию
+        const results = fuse.search(query).map((result) => result.item);
         return results;
     };
 
 
     const filteredMedicines = filterMedicines(filterCategory);
-    const searchedMedicines = searchMedicines(filteredMedicines, searchQuery); // Применяем поиск к отфильтрованным данным
+    const searchedMedicines = searchMedicines(filteredMedicines, searchQuery);
 
     return (
         <div>

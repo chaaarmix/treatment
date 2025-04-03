@@ -2,7 +2,6 @@ import React, {useState, useContext, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {UserContext} from "../components/UserProvider";
 import Navbar from "../components/Navbar";
-import "../styles/UserAccount.css";
 
 
 const addOneDay = (dateStr) => {
@@ -23,7 +22,7 @@ const formatDate = (dateStr) => {
 };
 
 const UserAccount = () => {
-    const {userData, setUserData} = useContext(UserContext);
+    const {setUserData} = useContext(UserContext);
     const navigate = useNavigate();
     const [user, setUser] = useState({name: "", birthDate: "", gender: ""});
     const [isEditing, setIsEditing] = useState(false);

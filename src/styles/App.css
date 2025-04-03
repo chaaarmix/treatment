@@ -855,3 +855,311 @@ input:checked + .slider:before {
     transform: translateX(26px);
 }
 
+/* Основные стили страницы */
+.notifications-page {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9fafb;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.notifications-page h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Карточка уведомления */
+.notification-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification-card__header {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.notification-card__header h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #222;
+}
+
+.notification-card__header p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Переключатель принятия лекарства */
+.notification-card__footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+
+/* Развернутая информация */
+.notification-card__details {
+    background-color: #f3f4f6;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #444;
+}
+
+.expand-text, .collapse-text {
+    color: #007bff;
+    font-size: 14px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.expand-text:hover, .collapse-text:hover {
+    text-decoration: underline;
+}
+
+
+.p-4 {
+    padding: 16px;
+}
+
+/* Стили формы добавления лечения */
+.treatment-form {
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.toggle-form-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.toggle-form-button:hover {
+    background-color: #0056b3;
+}
+
+.form-content input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Стили для календаря */
+.personal-calendar {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+.react-calendar__tile--active {
+    background: #007bff !important;
+    color: white !important;
+    border-radius: 5px;
+}
+
+/* Стили для расписания дня */
+.day-schedule {
+    background: #fff;
+    padding: 16px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.schedule-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.schedule-item:last-child {
+    border-bottom: none;
+}
+
+.expand-text, .collapse-text {
+    color: #007bff;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.expand-text:hover, .collapse-text:hover {
+    text-decoration: underline;
+}
+
+
+/* Стили формы добавления лечения */
+.treatment-form {
+    background: white;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.treatment-form h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.toggle-form-button {
+    width: 100%;
+    padding: 0.7rem;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s;
+}
+
+.toggle-form-button:hover {
+    background: #45a049;
+}
+
+.form-content input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.7rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.time-options label {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.time-options input {
+    margin-right: 0.5rem;
+}
+
+
+.personal-calendar .react-calendar__navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 0.5rem 0;
+}
+
+.personal-calendar {
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background: white;
+    padding: 1rem;
+}
+
+.personal-calendar .react-calendar__tile {
+    padding: 0.8rem;
+    font-size: 1rem;
+    transition: background 0.3s, color 0.3s;
+}
+
+.personal-calendar .react-calendar__tile--active {
+    background: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+.personal-calendar .react-calendar__tile--active:hover {
+    background: #45a049;
+}
+
+.personal-calendar .react-calendar__tile--now {
+
+    font-weight: bold;
+}
+
+.personal-calendar .react-calendar__tile--now:hover {
+    background: #FDD835;
+}
+
+.personal-calendar .react-calendar__tile:hover {
+    background: #E0E0E0;
+}
+
+.personal-calendar .react-calendar__month-view__days__day--weekend {
+    color: #D32F2F;
+}
+

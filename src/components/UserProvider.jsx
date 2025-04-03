@@ -22,11 +22,9 @@ const UserProvider = ({ children }) => {
     });
 
     useEffect(() => {
-        // Сохраняем состояние лекарств в localStorage при изменении
         localStorage.setItem("medications", JSON.stringify(medications));
     }, [medications]);
 
-    // Функция для обновления состояния принятия лекарства
     const handleMedicationTakenChange = (medicationId, isTaken) => {
         const updatedMedications = medications.map((med) =>
             med.id === medicationId ? { ...med, taken: isTaken } : med
