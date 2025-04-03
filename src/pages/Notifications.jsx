@@ -7,6 +7,9 @@ import Navbar from "../components/Navbar";
 const Notifications = () => {
     const { userData, medications, handleMedicationTakenChange } = useContext(UserContext);
     const [expandedNotificationId, setExpandedNotificationId] = useState(null);
+    useEffect(() => {
+        console.log("Медикаменты из контекста:", medications);
+    }, [medications]);
 
     useEffect(() => {
         fetchNotifications();
@@ -16,8 +19,6 @@ const Notifications = () => {
         try {
             const response = await axios.get(`http://localhost:5000/notifications?user_id=${userData.id}`);
             if (response.status === 200) {
-            } else {
-                console.error("Ошибка загрузки уведомлений");
             }
         } catch (error) {
             console.error("Ошибка при получении уведомлений:", error);
@@ -30,6 +31,17 @@ const Notifications = () => {
 
     const formatDate = (date) => {
         return moment(date).format("YYYY-MM-DD");
+    };
+
+    const getTodaysMedications = () => {
+        const today = moment().format("YYYY-MM-DD");
+        return medications.filter((med) => {
+            const startDate = moment(med.start_date, "YYYY-MM-DD");
+            const endDate = moment(med.end_date, "YYYY-MM-DD");
+            console.log("Медикаменты из контекста:", medications);
+
+            return startDate.isSameOrBefore(today) && endDate.isSameOrAfter(today);
+        });
     };
 
     const handleMedicationTakenChangeLocal = (medicationId, isTaken) => {
@@ -52,10 +64,11 @@ const Notifications = () => {
             <h1>Уведомления</h1>
 
             <div className="notification-list">
-                {medications.length === 0 ? (
+                {getTodaysMedications().length === 0 ? (
                     <p>Сегодня нет лекарств для принятия.</p>
                 ) : (
-                    medications.map((med) => (
+                    getTodaysMedications().map((med) => (
+
                         <div key={med.id} className="notification-card">
                             <div className="notification-card__header">
                                 <h3>{med.medicine_name} - {med.time}</h3>
