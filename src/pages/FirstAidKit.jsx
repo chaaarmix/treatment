@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import Navbar from "../components/Navbar";
 import { UserContext } from "../components/UserProvider";
 import Fuse from "fuse.js";
-import Tesseract from "tesseract.js";
+import Tesseracts from "tesseract.js";
 
 const FirstAidKit = () => {
     const { userData } = useContext(UserContext);
@@ -54,7 +54,6 @@ const FirstAidKit = () => {
         try {
             const token = localStorage.getItem("token");
 
-            // ⚡ Делаем запрос на сервер, чтобы проверить наличие лекарства в БД
             const response = await fetch(`http://localhost:5000/check-medicine?name=${inputName}`, {
                 method: "GET",
                 headers: { Authorization: `Bearer ${token}` },
@@ -74,12 +73,12 @@ const FirstAidKit = () => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ name: data.name }), // Отправляем название из БД
+                body: JSON.stringify({ name: data.name }),
             });
 
             if (addResponse.ok) {
-                setMedicine({ name: "" }); // Очищаем инпут
-                fetchMedicines(); // Обновляем список добавленных лекарств
+                setMedicine({ name: "" });
+                fetchMedicines();
             } else {
                 console.error("Ошибка добавления лекарства");
             }
@@ -125,7 +124,7 @@ const FirstAidKit = () => {
     const recognizeText = async (file) => {
         setLoading(true);
         try {
-            const { data } = await Tesseract.recognize(file, "rus+eng", {
+            const { data } = await Tesseracts.recognize(file, "rus+eng", {
                 logger: (m) => console.log(m),
             });
 

@@ -19,25 +19,24 @@ const UserProvider = ({ children }) => {
 
     const [medications, setMedications] = useState([]);
 
-    // 🔹 Загружаем лекарства с сервера при изменении userData.id
     useEffect(() => {
         const fetchMedications = async () => {
             if (!userData?.id) return;
 
             try {
                 const response = await axios.get(`http://localhost:5000/notifications?user_id=${userData.id}`);
-                console.log("🔹 Полученные лекарства:", response.data);
-                setMedications(response.data); // ✅ Загружаем лекарства в состояние
+                console.log("Полученные лекарства:", response.data);
+                setMedications(response.data);
             } catch (error) {
                 console.error("Ошибка загрузки медикаментов:", error);
             }
         };
 
         fetchMedications();
-    }, [userData?.id]); // 👈 Перезапуск, если userData.id изменился
+    }, [userData?.id]);
 
     useEffect(() => {
-        console.log("🔹 Медикаменты обновлены:", medications);
+        console.log("Медикаменты обновлены:", medications);
         localStorage.setItem("medications", JSON.stringify(medications));
     }, [medications]);
 

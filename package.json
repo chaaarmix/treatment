@@ -36,8 +36,12 @@
     "eject": "react-scripts eject",
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "client": "react-scripts start",
-    "server": "node server/index.js"
+    "server": "node server/index.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
+  "homepage": "https://chaaarmix.github.io/treatment.github.io",
+
   "eslintConfig": {
     "extends": [
       "react-app",

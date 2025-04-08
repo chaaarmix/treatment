@@ -140,7 +140,6 @@ const UserAccount = () => {
 
                 </div>
 
-
                 <div className="user-mainblock">
                     <div className="icon-col row-container">
                         {isEditing ? (<label>Сохранить данные</label>) : (<label>Редактировать данные</label>)}
